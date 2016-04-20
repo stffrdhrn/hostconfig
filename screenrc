@@ -1,0 +1,10 @@
+startup_message off
+#vbell off
+#escape /
+#defscrollback 5000
+#backtick 1 60 60 $HOME/.screenrc.acpi  # .screenrc.acpi contains 1 line: acpi | awk -F ', ' '{print $2}'
+escape ^|^|
+autodetach on
+defscrollback 10000
+hardstatus alwayslastline
+hardstatus string '%{= kG}%-Lw%{= kW}%50> %n*%f %t%{= kG}%+Lw%< %{= kG}%-=%D %m/%d/%y | %C:%s %A | %1`%{-}'
