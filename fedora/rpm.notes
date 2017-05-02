@@ -1,0 +1,12 @@
+# generated with dnf history userinstalled
+
+conky           - APP: system monitory like gkrellm
+efibootmgr      - needed for uefi boot query
+fribidi-devel   - needed for enlightenment
+glib-devel      - needed for kernel make gconfig
+gstreamer1-devel  - enlightenment emotion
+libX11-devel    - all x -devel needed for enlightenment compile
+memtester          - checking if new skylake machine memory is bad
+mplayer            - APP: play movies
+shim             - uefi boot shim
+xchat            - APP: irc
