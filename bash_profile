@@ -1,0 +1,85 @@
+# .bash_profile
+
+PKG_CONFIG_PATH=
+LD_LIBRARY_PATH=
+LDFLAGS=
+CFLAGS=
+
+# User specific environment and startup programs
+while read prefix ; do
+   [[ -d "$prefix/bin" ]] && PATH="$prefix/bin:$PATH"
+   [[ -d "$prefix/sbin" ]] && PATH="$prefix/sbin:$PATH"
+   [[ -d "$prefix/tools" ]] && PATH="$prefix/tools:$PATH"
+   [[ -d "$prefix/platform-tools" ]] && PATH="$prefix/platform-tools:$PATH"
+
+   [[ -d "$prefix/lib64" ]] && LD_LIBRARY_PATH="$prefix/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+   [[ -d "$prefix/lib64" ]] && CFLAGS="-I$prefix/lib64 $CFLAGS"
+   [[ -d "$prefix/lib64/pkgconfig" ]] && PKG_CONFIG_PATH="$prefix/lib64/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+
+   [[ -d "$prefix/lib" ]] && LD_LIBRARY_PATH="$prefix/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+   [[ -d "$prefix/lib" ]] && CFLAGS="-I$prefix/lib $CFLAGS"
+   [[ -d "$prefix/lib/pkgconfig" ]] && PKG_CONFIG_PATH="$prefix/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+
+   [[ -d "$prefix/include" ]] && LDFLAGS="-L$prefix/include $LDFLAGS"
+   [[ -f "$prefix/bin/go" ]] && GOROOT="$prefix"
+done < "$HOME/.prefixes"
+
+# For cpan perl installs
+PERL5LIB=$HOME/perl5/lib/perl5
+
+CVS_RSH=ssh
+SVN_EDITOR=vim
+EDITOR=vim
+
+# Build Env
+CFLAGS="-g -O2 -Wall $CFLAGS"
+
+JAVA_HOME="/opt/shorne/software/jdk"
+CATALINA_HOME="/usr/share/tomcat5"
+
+# Freedesktop Stuff
+# XDG_CONFIG_DIRS=/etc/xdg
+
+# No longer using netscape plugins
+# Extra paths for NS_ symbols needed for eclipse
+# MOZILLA_FIVE_HOME=/usr/lib64/mozilla:/usr/lib/mozilla
+
+# e17 cvs cscope (too old)
+# CSCOPE_DB=$HOME/work/ecvs/e17/cscope.out
+
+LADSPA_PATH=/usr/lib64/ladspa:$HOME/media/plugins
+
+# Eterm needs this for aclocal
+# ACLOCAL_FLAGS="-I /opt/shorne/eterm/share/aclocal"
+
+# Fedora 8 breaks libxcb
+# got RPM to fix it http://ajax.fedorapeople.org/libxcb/
+# https://bugzilla.redhat.com/show_bug.cgi?id=301691
+# LIBXCB_ALLOW_SLOPPY_LOCK=1
+
+# Allow Homebuild Python Modules to be found
+PYTHONPATH=/opt/shorne/software/orsoc/lib/python2.7/site-packages
+
+PATH=$PATH:$HOME/work/bin
+GOPATH=$HOME/work
+
+# Ruby Documentation formatter
+RI="-f ansi -T"
+
+export PATH LD_LIBRARY_PATH CVS_RSH CFLAGS LDFLAGS XDG_DATA_DIRS JAVA_HOME
+export PKG_CONFIG_PATH LADSPA_PATH RI
+export LIBXCB_ALLOW_SLOPPY_LOCK PYTHONPATH CATALINA_HOME
+export SVN_EDITOR EDITOR
+export GOROOT GOPATH
+export PERL5LIB
+
+# Altera quartus II
+export QSYS_ROOTDIR="/opt/shorne/software/quartus/quartus/sopc_builder/bin"
+export ALTERAOCLSDKROOT="/opt/shorne/software/quartus/hld"
+
+# Last: Get functions and stuff
+. $HOME/.bashrc
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

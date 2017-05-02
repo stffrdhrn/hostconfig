@@ -1,0 +1,18 @@
+
+[core]
+        attributesfile=~/.gitattributes
+[diff "po"]
+        textconv=msgcat --no-location --no-wrap --sort-output
+[user]
+	name = Stafford Horne
+	email = shorne@gmail.com
+	signingkey = 5E6627E4
+[sendemail]
+	smtpserver = /bin/msmtp
+	aliasesfile = ~/.gitaliases.mutt
+ 	aliasfiletype = mutt
+	assume8bitEncoding = UTF-8
+[merge]
+	stat = true
+[push]
+	default = simple

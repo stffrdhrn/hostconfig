@@ -1,0 +1,45 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+case $TERM in
+   xterm|terminator)
+      PROMPT_COMMAND='echo -ne "\033]0;-{${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}}-"; echo -ne "\007"'
+      ;;
+esac
+
+# colors, something is screwed up here
+WB='\[\e[30;47m\]'
+WR='\[\e[31;47m\]'
+NC='\[\e[0m\]'
+PS1=${WB}'< \u'${WR}'@'${WB}'\h \w >'${NC}' '
+PS2=${WR}'>'${NC}
+
+#if [ -z $PKG_CONFIG_PATH ] ; then
+#    . ~/.bash_profile
+#fi
+
+E_PREFIX=/opt/shorne/software/e
+
+# User specific aliases and functions
+alias ls='ls --color'
+alias autogen="./autogen.sh --prefix=$E_PREFIX --disable-static --libdir=$E_PREFIX/lib64"
+
+alias yeoman_init="curl -L get.yeoman.io | bash"
+
+export ALTERAOCLSDKROOT="/opt/shorne/software/quartus/hld"
+export QSYS_ROOTDIR="/opt/shorne/software/quartus/quartus/sopc_builder/bin"
+
+PATH="/home/shorne/perl5/bin${PATH+:}${PATH}"; export PATH;
+PERL5LIB="/home/shorne/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/shorne/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/shorne/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/shorne/perl5"; export PERL_MM_OPT;
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+# added by travis gem
+[ -f /home/shorne/.travis/travis.sh ] && source /home/shorne/.travis/travis.sh

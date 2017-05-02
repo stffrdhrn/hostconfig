@@ -1,0 +1,49 @@
+# mutt config
+
+# SENDMAIL
+# use msmtp to send mail (which uses gmail)
+set sendmail="/usr/bin/msmtp"
+set use_from=yes
+set realname="Stafford Horne"
+set from="shorne@gmail.com"
+set envelope_from=yes
+
+# IMAP for folders
+#set imap_user = 'shorne@gmail.com'
+#set folder = "imaps://imap.gmail.com/"
+#set spoolfile = +INBOX
+#set record = "+[Gmail]/Sent Mail"
+#set postponed = "+[Gmail]/Drafts"
+# IMAP cache
+#set header_cache=~/.mutt/cache/headers
+
+# Maildir for folders
+set mbox_type=Maildir
+set folder="~/.mail/gmail/"
+set spoolfile="+Inbox"
+# No need to save sent messages since gmail
+set copy=no
+
+# COLOR
+# Stolen from
+# http://karelzak.blogspot.jp/2010/02/highlighted-patches-inside-mutt.html
+color body green default "^diff \-.*"
+color body green default "^index [a-f0-9].*"
+color body green default "^\-\-\- .*"
+color body green default "^[\+]{3} .*"
+color body cyan default "^[\+][^\+]+.*"
+color body red  default "^\-[^\-]+.*"
+color body brightblue default "^@@ .*"
+
+## Usability
+set pager_index_lines = 6 # show 6 lines of inde in pager
+set pager_stop = yes      # stop wehn we get to the end of a pager
+set sort = threads        # Default sort order for index
+set sort_aux = last-date-received # sort newest threads last
+
+# from dvhart muttrc
+set pipe_split=yes
+
+set alias_file = ~/.gitaliases.mutt
+set sort_alias = alias
+source $alias_file
