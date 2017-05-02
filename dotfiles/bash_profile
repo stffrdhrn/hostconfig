@@ -6,6 +6,7 @@ LDFLAGS=
 CFLAGS=
 
 # User specific environment and startup programs
+if [ -f "$HOME/.prefixes" ] ; then
 while read prefix ; do
    [[ -d "$prefix/bin" ]] && PATH="$prefix/bin:$PATH"
    [[ -d "$prefix/sbin" ]] && PATH="$prefix/sbin:$PATH"
@@ -23,6 +24,7 @@ while read prefix ; do
    [[ -d "$prefix/include" ]] && LDFLAGS="-L$prefix/include $LDFLAGS"
    [[ -f "$prefix/bin/go" ]] && GOROOT="$prefix"
 done < "$HOME/.prefixes"
+fi
 
 # For cpan perl installs
 PERL5LIB=$HOME/perl5/lib/perl5
