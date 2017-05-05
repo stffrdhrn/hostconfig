@@ -1,0 +1,12 @@
+#!/bin/bash
+
+for file in dotfiles/*; do
+  name=`basename $file`
+  if [ -f $HOME/.$name ] ; then
+    echo "# ~/.$name exists, install manually with"
+    echo "cp -a $file $HOME/.$name"
+  else
+    cp -a $file $HOME/.$name
+  fi
+
+done
