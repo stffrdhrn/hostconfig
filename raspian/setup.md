@@ -52,12 +52,18 @@ edit /etc/auto.misc  , enable backup to /dev/sda1
 systemctl restart autofs.service
 
 # SSH 
-scp .ssh/id_rsa.pub shorne@pi:mac.id_rsa.pub
+ssh lianli cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
+# On mac
+scp .ssh/id_rsa.pub shorne@pi:mac.id_rsa.pub
+cat mac.id_rsa.pub >> ~/.ssh/authorized_keys
+
+# On pi generate keys, if needed only
 ssh-keygen -t rsa -b 4096 -C "shorne@$(hostname)"
 
 # Hosts
-/etc/hosts copy from other hosts in network
+cat etc/hosts >> /etc/hosts
+## Then edit to remove this host
 
 # Configure backups
 apt-get install rsnapshot
