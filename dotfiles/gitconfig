@@ -1,8 +1,9 @@
 
 [core]
-        attributesfile=~/.gitattributes
+	attributesfile = ~/.gitattributes
+	editor = vim
 [diff "po"]
-        textconv=msgcat --no-location --no-wrap --sort-output
+	textconv = msgcat --no-location --no-wrap --sort-output
 [user]
 	name = Stafford Horne
 	email = shorne@gmail.com

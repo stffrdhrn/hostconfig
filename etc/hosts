@@ -1,0 +1,7 @@
+# Hosts from hostconfig
+192.168.1.1	gw gw.shorne-pla.net
+#192.168.1.5	asus asus.shorne-pla.net
+#192.168.1.8	hp hp.shorne-pla.net www.shorne-pla.net www.sweetnsourbikes.com blog.shorne-pla.net static.shorne-pla.net
+192.168.1.31	pi pi.shorne-pla.net
+192.168.1.62	pi2 pi2.shorne-pla.net
+192.168.1.27	lianli lianli.shorne-pla.net

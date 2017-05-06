@@ -1,0 +1,33 @@
+--- /home/shorne/.bash_profile	2017-05-02 18:44:33.066895395 +0900
++++ dotfiles/bash_profile	2017-05-07 04:51:57.288305577 +0900
+@@ -82,3 +82,6 @@
+ # Last: Get functions and stuff
+ . $HOME/.bashrc
+ 
++export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
++
++[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+--- /home/shorne/.bashrc	2017-05-03 01:09:48.352137321 +0900
++++ dotfiles/bashrc	2017-05-07 04:51:57.298305528 +0900
+@@ -5,10 +5,6 @@
+ 	. /etc/bashrc
+ fi
+ 
+-if [ $TERM == "screen.xterm-256color" ] ; then
+-  export TERM="xterm"
+-fi
+-
+ case $TERM in
+    xterm|terminator)
+       PROMPT_COMMAND='echo -ne "\033]0;-{${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}}-"; echo -ne "\007"'
+@@ -16,8 +12,8 @@
+ esac
+ 
+ # colors, something is screwed up here
+-WB='\[\e[37;44m\]'
+-WR='\[\e[35;44m\]'
++WB='\[\e[30;47m\]'
++WR='\[\e[31;47m\]'
+ NC='\[\e[0m\]'
+ PS1=${WB}'< \u'${WR}'@'${WB}'\h \w >'${NC}' '
+ PS2=${WR}'>'${NC}
