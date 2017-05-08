@@ -1,25 +1,53 @@
-## Setup notes for raspberry pi
+# Setup notes for raspberry pi
 
-# Basic setup in
-raspi-config
+## Basic Setup
 
-# Ip address
-# Note wired ip wont shot up until plugged in
-/etc/dhcpcd.conf
+All basic setup like initial IP address, enable ssh and swtich to headless
+is in the basic config system.
 
-# User
-useradd shorne
-usermod -G sudo shorne
+ raspi-config
 
-# Update 
-apt-get update
-apt-get upgrade
+## Static IP
 
-# Packages
-apt-get install -y dnsutils vim autofs  iptables-persistent
-apt-get install -y apache2
+I want to setup static IPs so I know where my hosts are.
 
-# Firewall
+*Note* wired ip, i.e. eth0, won't shot up until actually plugged in.
+
+Edit file:
+
+  /etc/dhcpcd.conf
+
+## User
+Create a user, reset the default `pi` password
+
+As pi, create new user
+
+ useradd shorne
+ usermod -G sudo shorne
+
+As new user, disable pi
+
+ passwd -l pi
+
+## Update & Install Packages
+
+Update apt packages
+
+ apt-get update
+ apt-get upgrade
+
+Install packages
+
+ apt-get install -y dnsutils vim autofs lsof rsnapshot iptables-persistent
+
+If we want a webserver, usually not, install more
+
+ apt-get install -y apache2
+
+## Firewall
+
+Setup firewall to stop intruders trying to brute force password.  This is
+from https://lwn.net/Articles/704292/.
 
  iptables -A INPUT -p tcp -m state --state NEW --dport 22 -m recent \
   --name sshrate --set
@@ -32,32 +60,53 @@ apt-get install -y apache2
   --name sshrate --rcheck --seconds 60 --hitcount 4 -j REJECT \
   --reject-with tcp-reset
 
-# Noip
-wget https://www.noip.com/client/linux/noip-duc-linux.tar.gz
+If you get an IP that you want to stop permanently.  i.e. you see lots of
+failures in `dmesg` you can permanently disable with:
 
-make
-make install
-# Used systemd startup for noip
-https://gist.github.com/NathanGiesbrecht/da6560f21e55178bcea7fdd9ca2e39b5
+ iptables -A INPUT -s 65.55.44.100 -j DROP
 
-# nfs enable
-systemctl enable nfs-common
-systemctl start nfs-common
+## Noip
 
-# LVM Volumes
+We install noip so we can get to hosts even if their public IP changes.
 
-## Setup LVM volumes
-Use `fdisk` to create a LVM partition, then
+ wget https://www.noip.com/client/linux/noip-duc-linux.tar.gz
+ make
+ make install
 
-pvcreate /dev/sda1
-vgcreate data /dev/sda1
-lvcreate --name backup --size 250G data
-mkfs.ext4 /dev/mapper/data-backup
+Used systemd startup for noip
 
-## When migrating lvm volumes
+ https://gist.github.com/NathanGiesbrecht/da6560f21e55178bcea7fdd9ca2e39b5
+
+## NFS enable
+
+For moutning hosts under `/net`
+
+ systemctl enable nfs-common
+ systemctl start nfs-common
+
+## LVM Volumes
+
+### Setup LVM volumes
+
+Use `fdisk` to create a `Linux LVM` partition, then
+
+ pvcreate /dev/sda1
+ vgcreate data /dev/sda1
+ lvcreate --name backup --size 250G data
+ mkfs.ext4 /dev/mapper/data-backup
+
+### Enable LVM
+
+This doesnt work, I need to run `vgchange -ay` after reboot
+
+ systemctl enable lvm2.service
+
+### When migrating lvm volumes
+
 http://tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html
 
-unmount /misc/backup
+ # Unmount the partition
+ unmount /misc/backup
 
  vgchange -an data
  vgexport data
@@ -68,56 +117,82 @@ Unplug/move
  vgimport data
  vgchange -ay data
 
-mount
+mount as needed, usually just via automount as below
 
-# automounter
-edit /etc/auto.master, enable net, enable misc
-edit /etc/auto.misc  , enable backup to /dev/sda1
+## automounter
 
-## restart will create /net and /misc directories
-systemctl restart autofs.service
+We use automounter to allow mounting on demand.
 
-# SSH 
+ - edit /etc/auto.master, enable net, enable misc
+ - edit /etc/auto.misc  , enable backup to /dev/sda1
 
-# On pi generate keys, if needed only
+Restart will create /net and /misc directories
+
+ systemctl restart autofs.service
+
+## SSH Keys
+
+On pi generate keys, if needed only.  Or from your remote host if you want
+to have password less login to the pi.
+
  ssh-keygen -t rsa -b 4096 -C "shorne@$(hostname)"
  
-# To login from current host to remote
+Then copy your key to the destination host.
+
  cat ~/.ssh/id_rsa.pub | ssh shorne@${remotehost} \
    "cat >> ~/.ssh/authorized_keys"
 
-# Hosts
-cat etc/hosts >> /etc/hosts
-## Then edit to remove this host
+## Hosts
 
-# Configure backups
-apt-get install rsnapshot
+Add our general hosts config.
 
-https://wiki.centos.org/HowTos/RsnapshotBackups
+ cat etc/hosts >> /etc/hosts
 
+Also, its a good idea to add the new host to `etc/hosts` in this project.
+Then edit `/etc/hosts` to remove this host so you don't have a duplicate
+with `127.0.0.1`.
+
+## Configure backups
+
+For backups currently we use `rsnapshot` which provides a simple solution.
+
+Follow as per:
+
+ - https://wiki.centos.org/HowTos/RsnapshotBackups
+
+The rsnapshot setup is easy just read `/etc/rsnapshot.conf` and then add it
+into your crontab as needed. 
+
+Configuring ssh keys for root is a bit tricky if you dont have a root
+password.  I do:
 
  sudo -s
  if [ ! -f ~/.ssh/id_rsa.pub ] ; then
    ssh-keygen -t rsa -b 4096 -C "root@$(hostname)"
  fi
  
- remote_host=lianli
+ remote_host=myhost
  scp ~/.ssh/id_rsa.pub shorne@${remote_host}:pi.id_rsa.pub
  ssh shorne@${remote_host}
    cat pi.id_rsa.pub | sudo sh -c "cat >> ~/.ssh/authorized_keys"
    rm pi.id_rsa.pub
    exit
 
-# These should now work with no pw asked
+These should now work with no pw asked
+
  ssh ${remote_host} chmod 700 .ssh
  ssh ${remote_host} chmod 400 .ssh/authorized_keys
 
 
-## REMOTE REPLICA
-This to be setup to run after rsnapshot
+### Rsnapshot offsite mirror
 
-https://www.cyberciti.biz/faq/linux-unix-apple-osx-bsd-rsync-copy-hard-links/
+In order to get an offsite rsnapshot mirror in use mirror the latest
+rsnapshot mirror offsite with rsnapshot.
 
- rsync -az -H --delete --numeric-ids /misc/backup/cache \
-  /misc/backup2
+i.e. on a mirror site
+
+ backup root@pi:/var/cache/rsnapshot/hourly.0/ mirror/
+
+The offsite mirror should run rsnapshot `daily`, `hourly` etc to create
+snapshots and history as needed.
 
