@@ -80,7 +80,7 @@ If you get an IP that you want to stop permanently.  i.e. you see lots of
 failures in `dmesg` you can permanently disable with:
 
 ```
- iptables -A INPUT -s 65.55.44.100 -j DROP
+ iptables -I INPUT 1 -s 65.55.44.100 -j DROP
 ```
 
 ## Noip
