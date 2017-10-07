@@ -28,10 +28,13 @@ E_PREFIX=/opt/shorne/software/e
 alias ls='ls --color'
 alias autogen="./autogen.sh --prefix=$E_PREFIX --disable-static --libdir=$E_PREFIX/lib64"
 
-alias yeoman_init="curl -L get.yeoman.io | bash"
-
 export ALTERAOCLSDKROOT="/opt/shorne/software/quartus/hld"
 export QSYS_ROOTDIR="/opt/shorne/software/quartus/quartus/sopc_builder/bin"
+
+gentags() {
+  ctags -R .
+  cscope -Rb
+}
 
 PATH="/home/shorne/perl5/bin${PATH+:}${PATH}"; export PATH;
 PERL5LIB="/home/shorne/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
