@@ -126,6 +126,9 @@ This doesnt work, I need to run `vgchange -ay` after reboot
 ```
  # Doesnt do was is expected
  systemctl enable lvm2.service
+
+ # Perhaps this will do?
+ systemctl enable lvm2-activation.service
 ```
 
 ### When migrating lvm volumes
@@ -190,6 +193,44 @@ Add our general hosts config.
 Also, its a good idea to add the new host to `etc/hosts` in this project.
 Then edit `/etc/hosts` to remove this host so you don't have a duplicate
 with `127.0.0.1`.
+
+## VPN
+
+In case your PI will be installed in a location where its not accessible via a
+public IP it is possible to access it by setting up a VPN.
+
+### Server
+
+At least one system needs to have a public VPN running in order for this to
+work.  I used [pivpn](http://www.pivpn.io/) which is based on OpenVPN.  The
+setup is easy if you follow the docs on the web page.  So nothing to mention
+here.
+
+### Client
+
+Clients will connect to the server and then be available to other nodes in the
+server.  To setup the client.
+
+```
+# On the server generate a new certificate configuration
+pivpn add nopass
+# follow prompts
+
+# On the client
+
+# Install openvpn client
+sudo apt-get install openvpn
+
+# Copy the openvpn conf
+scp shorne@{remote_host}:/home/shorne/mypi.conf /etc/openvpn
+# Lock down the file (as it contains sensitive keys)
+sudo chown root.root /etc/openvpn/mypi.conf
+sudo chmod 600 /etc/openvpn/mypi.conf
+
+# Enable openvpn client
+systemctl enable openvpn@mypi.service 
+
+```
 
 ## Configure backups
 
