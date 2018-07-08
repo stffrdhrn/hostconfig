@@ -13,13 +13,30 @@ is in the basic config system.
 
 I want to setup static IPs so I know where my hosts are.
 
-*Note* wired ip, i.e. eth0, won't shot up until actually plugged in.
+*Note* wired ip, i.e. eth0, won't show up until actually plugged in.
 
 Edit file:
 
 ```
   /etc/dhcpcd.conf
 ```
+
+Example:
+```
+# After top part ...
+
+interface eth0
+static ip_address=10.0.0.31/8
+
+interface wlan0
+static ip_address=192.168.1.31/24
+static routers=192.168.1.1
+static domain_name_servers=192.168.1.1
+static domain_search=shorne-pla.net
+```
+
+When done we do `systemctl restart dhcpcd.service` to restart networks and apply
+settings.  We may lose connectivity after this.
 
 ## User
 Create a user, reset the default `pi` password
@@ -66,11 +83,11 @@ from https://lwn.net/Articles/704292/.
 ```
  iptables -A INPUT -p tcp -m state --state NEW --dport 22 -m recent \
   --name sshrate --set
- 
+
  iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent \
   --name sshrate --rcheck --seconds 60 --hitcount 4 -j LOG \
   --log-prefix "SSH REJECT: "
- 
+
  iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent \
   --name sshrate --rcheck --seconds 60 --hitcount 4 -j REJECT \
   --reject-with tcp-reset
@@ -81,6 +98,42 @@ failures in `dmesg` you can permanently disable with:
 
 ```
  iptables -I INPUT 1 -s 65.55.44.100 -j DROP
+```
+
+### Routing
+
+If you are using your pi as a router you will need to setup masquerading.  In my
+can I have a configuration like this:
+
+```
+
+                SUBNET 1                     SUBNET 2
+             192.168.1.0/24                10.0.0.0/24
+
+  [ Wifi Router ]-<)      (>--[(wlan0) pi (eth0)]--[switch]--{subnet}
+
+```
+
+Here, the pi acts as the router for hosts in subnet 2 to access the internet.
+My wifi router is connected to the internet.  The pi spans two subnets with
+`wlan0` on the `192.168.1.0/24` and `eth0` on the `10.0.0.0/24` subnet.
+
+To enable masquewrading (rewriting) of traffic outgoing from the `wlan0`
+interface we do the following:
+
+```
+ sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+```
+
+
+### Saving Changes
+
+Changes to firewalls are automatically saved to the following files by the `iptables-persistent`
+packages we installed earlier:
+
+```
+/etc/iptables/rules.v4
+/etc/iptables/rules.v6
 ```
 
 ## Noip
