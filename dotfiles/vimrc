@@ -20,8 +20,8 @@ if &term=="xterm"
 endif
 
 " GNU guidelines
-set textwidth=75
-set colorcolumn=75
+set textwidth=80
+set colorcolumn=80
 
 " Allow recusrive search of filenames
 set path+=**
@@ -46,4 +46,9 @@ set laststatus=2
 set statusline=%f\ %h%m%r\ %-20.(line=%l,col=%c,totlin=%L%)%=[0x%B][#%n][%Y]%p%%
 
 " Some useful mappings
+map \a oAcked-by: Stafford Horne <shorne@gmail.com><CR><ESC>
 map \s oSigned-off-by: Stafford Horne <shorne@gmail.com><CR><ESC>
+map \r oReviewed-by: Stafford Horne <shorne@gmail.com><CR><ESC>
+
+" lately I am working on gcc machine descriptions, not markdown
+autocmd BufRead,BufNewFile *.md set filetype=lisp

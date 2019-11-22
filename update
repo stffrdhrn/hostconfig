@@ -1,0 +1,9 @@
+#!/bin/bash
+# Copy dotfiles from home dir into here.
+
+for file in dotfiles/*; do
+  name=`basename $file`
+  if [ -f $HOME/.$name ] ; then
+    cp -a $HOME/.$name $file
+  fi
+done
