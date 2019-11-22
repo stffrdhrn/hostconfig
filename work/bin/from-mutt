@@ -1,0 +1,13 @@
+#!/bin/bash
+# For use with mutt and am-incoming, saves an email patch to
+# to the incoming directory.  You can then apply the patch later
+# with the other tools.
+
+mkdir -p $HOME/work/incoming
+
+PATCH_FILE=`mktemp --tmpdir="/tmp"  mutt-patch.XXXXXX`
+cat > $PATCH_FILE
+SUBJECT=`grep -o '^Subject: \(.*\)' $PATCH_FILE | sed -e 's/^Subject: //'`
+MAILBOX=`echo $SUBJECT | tr "'" "." | sed -e '{s@\[@@g; s@\]@@g; s@[*()" \t]@_@g; s@[/:]@-@g; s@^ \+@@; s@\.\.@.@g; s@-_@_@g; s@__@_@g; s@\.$@@; }' | cut -c 1-70`.patch
+
+mv "$PATCH_FILE" "$HOME/work/incoming/$MAILBOX"

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# nightly cleanup for incoming files not zapped
+INCOMING=$HOME/work/incoming
+ARCHIVE=$INCOMING/archive
+
+mkdir -p $ARCHIVE
+
+find $INCOMING -maxdepth 1 -name "*.patch" -mtime +1 -exec mv {} $ARCHIVE \;

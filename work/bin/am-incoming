@@ -1,0 +1,34 @@
+#!/bin/bash
+# for use with the linux kernel, apply patches that are in
+# the incoming directory
+
+INCOMING=$HOME/work/incoming
+
+if [ -x $1 ] ; then
+  echo "usage: $0 <patch>"
+  if [ -d "$INCOMING" ] ; then
+    echo
+    echo "Available:"
+    ls -l $INCOMING
+  fi
+  exit 1
+fi
+
+mkdir -p $INCOMING/zapped
+
+am_patch() {
+  declare patch="$1"
+
+  if [ ! -f "$patch" ] ; then
+    echo "cannot find file $patch"
+    exit 1
+  fi
+
+  if git am -s "$patch" ; then
+    mv $patch $INCOMING/zapped/
+  fi
+}
+
+for file in $INCOMING/$1 ; do
+  am_patch $file
+done

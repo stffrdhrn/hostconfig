@@ -8,5 +8,4 @@ for file in dotfiles/*; do
   else
     cp -a $file $HOME/.$name
   fi
-
 done
