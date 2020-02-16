@@ -1,0 +1,13 @@
+#!/bin/bash
+# Sourced by host config tools to get configuration
+
+LOG_DIR="/var/tmp/${USER}-log"
+BACKUP_HOME="/misc/backup"
+BACKUP_SERVER="pi"
+
+MAILTO=shorne@gmail.com
+
+mkdir -p $LOG_DIR
+
+# Clean up old log files
+find $LOG_DIR -mtime +5 -delete

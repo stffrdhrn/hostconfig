@@ -1,33 +1,39 @@
 #!/bin/bash
 #set -x
 
+source $HOME/.hostconfigrc
+
 host=$(hostname)
 today=$(date -u +%Y-%m-%d)
 
-BACKUP_HOME="/misc/backup/${USER}"
-BACKUP_SERVER="pi"
-DEST="${BACKUP_HOME}/hosts/${host}/${today}"
-LOG="/var/tmp/backup-${USER}-${host}-${today}.log"
+if [ -z "$BACKUP_HOME" ] ; then
+  echo "Missing BACKUP_HOME definition." 1>&2
+  exit 1
+fi
 
-RSYNC_OPTS="-e ssh -v -a -R"
+DEST_HOME="${BACKUP_HOME}/${USER}/hosts"
+DEST_PATH="${DEST_HOME}/${host}/${today}"
+DEST=$DEST_PATH
+
+LOG="$LOG_DIR/backup-${USER}-${host}-${today}.log"
+
+RSYNC_OPTS="-v -a -z -R"
+if [ -n "$BACKUP_SERVER" ] ; then
+  RSYNC_OPTS="-e ssh $RSYNC_OPTS"
+  DEST="${BACKUP_SERVER}:${DEST}"
+fi
 
 # Snapshot keep settings
-KEEP_COUNT_MIN=10
-KEEP_MONTH_MIN=12
-
-# need to keep
-#  1st day of month
-#  1st day of year
+KEEP_COUNT_MIN=${KEEP_COUNT_MIN:-10}
+KEEP_MONTH_MIN=${KEEP_MONTH_MIN:-12}
 
 # day of year to keep forever, 1 - 365
-YEAR_DAY_TO_KEEP=1
+YEAR_DAY_TO_KEEP=${YEAR_DAY_TO_KEEP:-1}
 # day of month to keep (KEEP_MONTH_MIN), 1 - 31
-MONTH_DAY_TO_KEEP=1
+MONTH_DAY_TO_KEEP=${MONTH_DAY_TO_KEEP:-1}
 
 # Run with V=1 for debug, etc
-if [ -z "$V" ] ; then
-  V=3
-fi
+V=${V:-3}
 
 log() {
   local level=$1 ; shift
@@ -43,21 +49,27 @@ info()  { log 3 "INFO" "$1"; }
 warn()  { log 5 "WARN" "$1"; }
 error() { log 6 "ERROR" "$1"; }
 
+report() {
+  if [ -n "$MAILTO" ] ; then
+    mail -s "Backup failure report $today" $MAILTO
+  else
+    cat >>"$LOG_DIR/error-report"
+  fi
+}
+
 backup() {
   local path=$1; shift
   if [ -f $path ] || [ -d $path ] ; then
     info "backing up $path"
 
     if [ -n "$BACKUP_SERVER" ] ; then
-      info "run: ssh $BACKUP_SERVER mkdir -p $DEST"
-      ssh $BACKUP_SERVER "mkdir -p $DEST"
-      info "run: rsync $RSYNC_OPTS $path $DEST"
-      if ! rsync $RSYNC_OPTS $path $BACKUP_SERVER:$DEST >> $LOG ; then
-        tail $LOG | mail -s "backup FAILED $path $today" shorne@gmail.com
-      fi
-    else
-      info "run: rsync $RSYNC_OPTS $path $DEST"
-      rsync $RSYNC_OPTS $path $DEST >> $LOG
+      info "run: ssh $BACKUP_SERVER mkdir -p $DEST_PATH"
+      ssh $BACKUP_SERVER "mkdir -p $DEST_PATH"
+    fi
+
+    info "run: rsync $RSYNC_OPTS $path $DEST"
+    if ! rsync $RSYNC_OPTS $path $DEST >> $LOG ; then
+        error "backup FAILED $path $today"
     fi
 
     info "done"
@@ -101,9 +113,18 @@ info "Starting: $0 user: $USER pid: $$ Logging to file: $LOG"
 #  keep yearly (jan 1)  snapshots forever 
 
 if [ -d $BACKUP_HOME ] ; then
-  info "Cleaning up $BACKUP_HOME"
-  for snapshot in `find $BACKUP_HOME -maxdepth 3 | grep '/....-..-..$'`; do
+  info "Cleaning up $DEST_HOME"
+  for snapshot in `find $DEST_HOME -maxdepth 2 | grep '/....-..-..$'`; do
     snapshot_dt=`basename $snapshot`
+    snapshot_base=`dirname $snapshot`
+
+    # If we start working on a new directory reset counters
+    if [ "$snapshot_base" != "$last_snapshot_base" ] ; then
+      last_snapshot_base="$snapshot_base"
+      count_snapshots=0
+      month_snapshots=0
+    fi
+
     if keep_snapshot $snapshot_dt; then
       info "Keeping snapshot $snapshot"
     else
@@ -122,5 +143,14 @@ else
   warn "No backups, you need to define $HOME/.backups"
 fi
 
-# Clean up old log files
-find /var/tmp/backup-${USER}-* -mtime +5 -delete
+if grep -q " ERROR " $LOG ; then
+  {
+    echo "Dear Sysop,"
+    echo
+    echo "We have detected a problem, please consult the log for more detail."
+    echo "Host: $host"
+    echo "Log: $LOG"
+    echo
+    grep " ERROR " $LOG 
+  } | report
+fi

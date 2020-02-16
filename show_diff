@@ -4,3 +4,7 @@ for file in dotfiles/*; do
   name=`basename $file`
   diff -ru $file $HOME/.$name
 done
+
+for script in work/bin/*; do
+  diff -ru $script $HOME/$script
+done
