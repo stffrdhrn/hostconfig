@@ -24,5 +24,7 @@
 [push]
 	default = simple
 [alias]
-	lo = log --oneline -n10
+	dc = diff --cached
+	lo = log --pretty=format:'%C(yellow)%cd %C(green)%h %C(blue)%<(16)%aN%Creset %s %C(auto)%d%Creset' --decorate --date=short -n10
+#	lo = log --oneline -n10
 	rmt = remote -v

@@ -2,6 +2,5 @@
 
 for file in dotfiles/*; do
   name=`basename $file`
-  diff -ru $HOME/.$name $file
-
+  diff -ru $file $HOME/.$name
 done
