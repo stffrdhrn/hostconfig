@@ -1,0 +1,14 @@
+#!/bin/bash
+# A script for forward errors from remote hosts
+# to email.
+
+source $HOME/.hostconfigrc
+
+REPORT="$LOG_DIR/error-report"
+
+for host in `echo $REMOTE_HOSTS`; do
+  if ssh $host "[ -f $REPORT ]" ; then
+    ssh $host "cat $REPORT" | mail -s "Error report from $host" $MAILTO 
+    ssh $host "rm $REPORT"
+  fi
+done

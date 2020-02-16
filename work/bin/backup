@@ -53,7 +53,10 @@ report() {
   if [ -n "$MAILTO" ] ; then
     mail -s "Backup failure report $today" $MAILTO
   else
-    cat >>"$LOG_DIR/error-report"
+    {
+      echo "== Backup failure report $today =="
+      cat
+    } >>"$LOG_DIR/error-report"
   fi
 }
 
@@ -79,7 +82,7 @@ backup() {
 }
 
 keep_snapshot() {
-  snapshot=$1
+  local snapshot=$1
   count_snapshots=$((count_snapshots+1))
 
   day_of_month=`date +'%d' -d "$snapshot"`
@@ -143,6 +146,7 @@ else
   warn "No backups, you need to define $HOME/.backups"
 fi
 
+# Check logs for errors and report
 if grep -q " ERROR " $LOG ; then
   {
     echo "Dear Sysop,"
