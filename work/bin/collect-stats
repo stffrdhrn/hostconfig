@@ -1,0 +1,48 @@
+#!/bin/bash
+
+source $HOME/.hostconfigrc
+
+localhost=$(hostname)
+today=$(date -u +%Y-%m-%d)
+hhmm=$(date -u +%H%M)
+
+collect_disk() {
+  local host=$1; shift
+
+  if [ $host == $localhost ] ; then
+    du -h > "${STATS_DIR}/du.${hhmm}"
+  else
+    ssh -q $host "du -h" > "${STATS_DIR}/du.${hhmm}"
+  fi
+}
+
+collect_top() {
+  local host=$1; shift
+
+  if [ $host == $localhost ] ; then
+    top -b -c -n1 > "${STATS_DIR}/top.${hhmm}"
+  else
+    ssh -q $host "top -b -c -n1" > "${STATS_DIR}/top.${hhmm}"
+  fi
+}
+
+collect_last() {
+  local host=$1; shift
+
+  if [ $host == $localhost ] ; then
+    last -n20 > "${STATS_DIR}/last.${hhmm}"
+  else
+    ssh -q $host "last -n20" > "${STATS_DIR}/last.${hhmm}"
+  fi
+}
+
+
+for host in `echo $REMOTE_HOSTS $localhost`; do
+
+  STATS_DIR="${STATS_HOME}/hosts/${host}/${today}"
+  mkdir -p $STATS_DIR
+
+  collect_disk $host
+  collect_top $host
+  collect_last $host
+done

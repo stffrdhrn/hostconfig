@@ -1,0 +1,54 @@
+## GDB initializations, all are run when
+## gdb starts up.
+
+add-auto-load-safe-path /home/shorne/work/linux
+add-auto-load-safe-path /home/shorne/work/litex/litex-buildenv/build/arty_net_or1k.linux/software/linux
+add-auto-load-safe-path /home/shorne/work/litex/litex-buildenv/third_party/linux
+
+# For multicore debugging openrisc with openocd
+
+# toggle0 : force display of coreid 0
+define toggle0
+ maint packet Jc0
+ continue
+ # remember here -1 is negative one to disable toggle mode, not a hyphen
+ maint packet Jc-1
+end
+# toggle1 : force display of coreid 1
+define toggle1
+ maint packet Jc1
+ continue
+ maint packet Jc-1
+end
+
+# reset so we can load
+define load_reset
+ monitor init
+ monitor halt
+ monitor targets
+ toggle1
+ set $npc = 0x100
+ set $r3 = 0x0
+ toggle0
+ set $npc = 0x100
+ set $r3 = 0x0
+ monitor targets
+end
+
+# reset to send the cpus running
+define reset
+ monitor reset
+end
+
+# get status of targets 1 and 0
+define targets
+ monitor targets
+ toggle1
+ p/x $npc
+ p/x $r3
+ toggle0
+ p/x $npc
+ p/x $r3
+end
+
+

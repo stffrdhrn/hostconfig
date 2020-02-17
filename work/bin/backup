@@ -11,11 +11,11 @@ if [ -z "$BACKUP_HOME" ] ; then
   exit 1
 fi
 
-DEST_HOME="${BACKUP_HOME}/${USER}/hosts"
+DEST_HOME="${BACKUP_HOME}/${LOGNAME}/hosts"
 DEST_PATH="${DEST_HOME}/${host}/${today}"
 DEST=$DEST_PATH
 
-LOG="$LOG_DIR/backup-${USER}-${host}-${today}.log"
+LOG="$LOG_DIR/backup-${LOGNAME}-${host}-${today}.log"
 
 RSYNC_OPTS="-v -a -z -R"
 if [ -n "$BACKUP_SERVER" ] ; then
@@ -108,7 +108,7 @@ keep_snapshot() {
 
 ##### MAIN #####
 
-info "Starting: $0 user: $USER pid: $$ Logging to file: $LOG"
+info "Starting: $0 user: $LOGNAME pid: $$ Logging to file: $LOG"
 
 # 1. if local, remove old stuff
 #  keep daily           snapshots for 1 week

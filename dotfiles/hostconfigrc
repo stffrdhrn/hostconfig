@@ -1,13 +1,18 @@
 #!/bin/bash
 # Sourced by host config tools to get configuration
 
-LOG_DIR="/var/tmp/${USER}-log"
+LOG_DIR="/var/tmp/${LOGNAME}-log"
 BACKUP_HOME="/misc/backup"
 BACKUP_SERVER="pi"
+
+STATS_HOME="/var/tmp/${LOGNAME}-matrix"
+
+REMOTE_HOSTS="pi"
 
 MAILTO=shorne@gmail.com
 
 mkdir -p $LOG_DIR
+mkdir -p $STATS_HOME
 
 # Clean up old log files
 find $LOG_DIR -mtime +5 -delete
