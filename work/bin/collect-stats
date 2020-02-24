@@ -10,9 +10,9 @@ collect_disk() {
   local host=$1; shift
 
   if [ $host == $localhost ] ; then
-    du -h > "${STATS_DIR}/du.${hhmm}"
+    df -h > "${STATS_DIR}/df.${hhmm}"
   else
-    ssh -q $host "du -h" > "${STATS_DIR}/du.${hhmm}"
+    ssh -q $host "df -h" > "${STATS_DIR}/df.${hhmm}"
   fi
 }
 
@@ -46,3 +46,6 @@ for host in `echo $REMOTE_HOSTS $localhost`; do
   collect_top $host
   collect_last $host
 done
+
+# Save space for older items
+find ${STATS_HOME} -type f -mtime +5 -exec xz {} \;

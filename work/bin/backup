@@ -22,6 +22,9 @@ if [ -n "$BACKUP_SERVER" ] ; then
   RSYNC_OPTS="-e ssh $RSYNC_OPTS"
   DEST="${BACKUP_SERVER}:${DEST}"
 fi
+if [ -f "$HOME/.backup-excludes" ] ; then
+  RSYNC_OPTS="$RSYNC_OPTS --exclude-from=$HOME/.backup-excludes"
+fi
 
 # Snapshot keep settings
 KEEP_COUNT_MIN=${KEEP_COUNT_MIN:-10}
@@ -31,6 +34,9 @@ KEEP_MONTH_MIN=${KEEP_MONTH_MIN:-12}
 YEAR_DAY_TO_KEEP=${YEAR_DAY_TO_KEEP:-1}
 # day of month to keep (KEEP_MONTH_MIN), 1 - 31
 MONTH_DAY_TO_KEEP=${MONTH_DAY_TO_KEEP:-1}
+
+# Compress settings
+UNCOMPRESS_KEEP_DAYS=${UNCOMPRESS_KEEP_DAYS:-2}
 
 # Run with V=1 for debug, etc
 V=${V:-3}
@@ -137,7 +143,18 @@ if [ -d $BACKUP_HOME ] ; then
   done
 fi
 
-# 2. backup today
+# 2. If local, compress old stuff
+if [ -d $BACKUP_HOME ] ; then
+  info "Compressing $DEST_HOME"
+  for hostdir in $BACKUP_HOME/*; do
+    for snapshot_dir in `ls $hostdir | head -n -${UNCOMPRESS_KEEP_DAYS}` ; do
+      info "Compressing snapshot $snapshot_dir"
+    done
+  done
+fi
+
+
+# 3. backup today
 if [ -f $HOME/.backups ] ; then
   while read path; do
     backup $path </dev/null
