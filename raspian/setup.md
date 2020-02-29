@@ -100,6 +100,12 @@ failures in `dmesg` you can permanently disable with:
  iptables -I INPUT 1 -s 65.55.44.100 -j DROP
 ```
 
+If you want to add a local IP to always have access.
+
+```
+iptables -I INPUT -p tcp -s 10.0.0.27 -j ACCEPT
+```
+
 ### Routing
 
 If you are using your pi as a router you will need to setup masquerading.  In my
@@ -125,6 +131,9 @@ interface we do the following:
  sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
 ```
 
+We have setup static routes on the Wifi router so any packets bound for the
+`10.0.0.0/24` subnet should be automatically routed through the pi.  Also,
+any traffic from the `10.0.0.0/24` subnet should be routed back through the pi.
 
 ### Saving Changes
 
