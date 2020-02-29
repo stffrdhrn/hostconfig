@@ -184,6 +184,28 @@ This doesnt work, I need to run `vgchange -ay` after reboot
  systemctl enable lvm2-activation.service
 ```
 
+### LVM Basics
+
+LVM (Linux Volume Manager) has the following concepts.
+
+ - Physical Volumnes (pv) lower level disks
+ - Volume Groups (vg) middle level
+ - Logical Volumne (lv) top level, this is were our filesystem is made
+
+*Checking things out*
+```
+sudo pvs
+sudo vgs
+sudo lvs
+```
+
+*Adding space to a volume*
+```
+sudo lvextend -L +100G /dev/data/backup
+sudo lvdisplay
+sudo resize2fs /dev/mapper/data-backup
+```
+
 ### When migrating lvm volumes
 
 http://tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html
