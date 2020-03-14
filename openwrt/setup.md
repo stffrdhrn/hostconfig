@@ -4,7 +4,17 @@ My router is installed with OpenWRT, basic setup notes.
 
 ## Basic Setup
 
+ - System hostname `gw`
+
  - DHCP Network/GW 192.168.1.1
+ - DHCP static lease for pi 192.168.1.31
+ - Host names
+
+```
+pi 192.168.1.31
+lianli 10.0.0.27
+```
+
  - Static Routes
 
 ```
