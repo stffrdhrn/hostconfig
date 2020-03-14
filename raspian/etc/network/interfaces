@@ -1,0 +1,29 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+        address 10.0.0.31
+        netmask 255.255.255.0
+        network 10.0.0.0
+        broadcast 10.0.0.255
+	### static routing for eth0 that connects to QEMU tap ###
+        post-up route add -net 10.9.0.0 netmask 255.0.0.0 gw 10.0.0.27
+        pre-down route del -net 10.9.0.0 netmask 255.0.0.0 gw 10.0.0.27
+
+
+allow-hotplug wlan0
+iface wlan0 inet manual
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+allow-hotplug wlan1
+iface wlan1 inet manual
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
