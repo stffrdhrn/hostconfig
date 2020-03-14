@@ -131,9 +131,14 @@ interface we do the following:
  sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
 ```
 
+**Msquerading not needed**
+
 We have setup static routes on the Wifi router so any packets bound for the
 `10.0.0.0/24` subnet should be automatically routed through the pi.  Also,
 any traffic from the `10.0.0.0/24` subnet should be routed back through the pi.
+
+There is a qemu/virtual device on `10.0.0.27` we also have a static route to
+`10.9.0.0/24 via 10.0.0.27 dev eth0` in both the pi and OpenWRT.
 
 ### Saving Changes
 
