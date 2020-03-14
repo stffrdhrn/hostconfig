@@ -123,7 +123,7 @@ info "Starting: $0 user: $LOGNAME pid: $$ Logging to file: $LOG"
 
 if [ -d $BACKUP_HOME ] ; then
   info "Cleaning up $DEST_HOME"
-  for snapshot in `find $DEST_HOME -maxdepth 2 | grep '/....-..-..$'`; do
+  for snapshot in `find $DEST_HOME -maxdepth 2 -name '*-*-*' | sort -r `; do
     snapshot_dt=`basename $snapshot`
     snapshot_base=`dirname $snapshot`
 
