@@ -9,6 +9,7 @@ set nocompatible
 if &t_Co > 2 || has("gui_running")
   syntax on
   set hlsearch
+  set noincsearch
 endif
 
 filetype plugin on
@@ -21,7 +22,11 @@ endif
 
 " GNU guidelines
 set textwidth=80
-set colorcolumn=80
+
+" Don't use color column, match lines over 81 columns as Error
+set colorcolumn=
+match Error /\%81v.\+/
+match Error /[ \t]\+$/
 
 " Allow recusrive search of filenames
 set path+=**

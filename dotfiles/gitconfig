@@ -2,6 +2,8 @@
 [core]
         attributesfile=~/.gitattributes
 	whitespace = indent-with-non-tab,space-before-tab,trailing-space
+[commit]
+	verbose = true
 [diff "po"]
         textconv=msgcat --no-location --no-wrap --sort-output
 [diff "odf"]

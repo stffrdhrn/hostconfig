@@ -2,10 +2,12 @@ servers = (
   { address = "irc.dal.net"; chatnet = "DALnet"; port = "6667"; },
   { address = "irc.efnet.org"; chatnet = "EFNet"; port = "6667"; },
   { address = "irc.esper.net"; chatnet = "EsperNet"; port = "6667"; },
-  { 
+  {
     address = "chat.freenode.net";
     chatnet = "Freenode";
+    password = "__PASSWORD__";
     port = "6667";
+    autoconnect = "yes";
   },
   {
     address = "irc.gamesurge.net";
@@ -20,7 +22,12 @@ servers = (
     port = "6667";
   },
   { address = "irc.netfuze.net"; chatnet = "NetFuze"; port = "6667"; },
-  { address = "irc.oftc.net"; chatnet = "OFTC"; port = "6667"; },
+  {
+    address = "irc.oftc.net";
+    chatnet = "OFTC";
+    port = "6667";
+    autoconnect = "yes";
+  },
   { 
     address = "irc.quakenet.org";
     chatnet = "QuakeNet";
@@ -32,6 +39,14 @@ servers = (
     address = "irc.undernet.org";
     chatnet = "Undernet";
     port = "6667";
+  },
+  {
+    address = "irc.gitter.im";
+    chatnet = "gitter";
+    port = "6697";
+    password = "fac4ef265cb8c159334d202d1343bf139d98583a";
+    use_tls = "yes";
+    tls_verify = "no";
   }
 );
 
@@ -56,7 +71,6 @@ chatnets = {
   };
   Freenode = {
     type = "IRC";
-    autosendcmd = "^MSG NickServ identify {password}";
     max_kicks = "1";
     max_msgs = "4";
     max_whois = "1";
@@ -105,6 +119,7 @@ chatnets = {
     max_msgs = "1";
     max_whois = "1";
   };
+  gitter = { type = "IRC"; nick = "stffrdhrn"; };
 };
 
 channels = (
@@ -120,8 +135,11 @@ channels = (
   { name = "#edevelop"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#openrisc"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#gdb"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#glibc"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#kernelnewbies"; chatnet = "oftc"; autojoin = "yes"; },
-  { name = "#qemu"; chatnet = "oftc"; autojoin = "yes"; }
+  { name = "#gcc"; chatnet = "oftc"; autojoin = "yes"; },
+  { name = "#qemu"; chatnet = "oftc"; autojoin = "yes"; },
+  { name = "#timvideos"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -383,4 +401,15 @@ settings = {
     nick = "shorne";
   };
   "fe-text" = { actlist_sort = "refnum"; };
+  "fe-common/core" = {
+    autolog_path = "~/irclogs/%Y/$tag/$0.%Y-%m-%d.log";
+    autolog = "yes";
+    autolog_level = "all -crap -clientcrap -ctcps -joins -parts -quits";
+  };
+};
+logs = {
+  "~/irssi.log" = {
+    level = "ALL";
+    items = ( { type = "window"; name = "1"; } );
+  };
 };

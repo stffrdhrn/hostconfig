@@ -47,3 +47,9 @@ set pipe_split=yes
 set alias_file = ~/.gitaliases.mutt
 set sort_alias = alias
 source $alias_file
+
+# render HTML and some other types as text
+auto_view text/html application/text application/pdf
+
+# many companies send very poor text/plain parts, so prefer html to text/plain
+alternative_order text/enriched text/html text/plain text
