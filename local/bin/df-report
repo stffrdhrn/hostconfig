@@ -1,0 +1,11 @@
+#!/bin/bash
+
+source $HOME/.hostconfigrc
+
+echo "Scanning stats in ${STATS_HOME}/hosts"
+cd ${STATS_HOME}/hosts
+for host in *; do
+  echo "DF $host"
+  grep '[789].%' $host/*/df.*05 | grep -v '/mnt/hd0\|/boot' | tail -n10
+done
+

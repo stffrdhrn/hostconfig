@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ "$VERBOSE" ] ; then
+  ssh pi 'du -sh /misc/backup/shorne/hosts/*/*'
+else
+  ssh pi 'ls /misc/backup/shorne/hosts/*'
+fi

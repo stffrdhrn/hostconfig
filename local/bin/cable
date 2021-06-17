@@ -1,0 +1,57 @@
+#!/bin/bash
+# Quick script to bring up down network if I plug in my cable directly
+# to the router instead of using wifi.
+
+IF=enp0s31f6
+# routing via direct cable
+CABLE_IP=192.168.2.27
+CABLE_GW=192.168.2.1
+
+# routing via pi
+WIFI_IP=10.0.0.27
+WIFI_GW=10.0.0.31
+
+#Extra IP for fpga dev
+DEV_IP=192.168.1.100
+
+up() {
+  ip addr flush dev ${IF}
+  ip addr add ${WIFI_IP}/24 dev ${IF}
+  ip addr add ${CABLE_IP}/24 dev ${IF}
+  ip addr add ${DEV_IP}/24 dev ${IF}
+  #ip route del default via ${WIFI_GW}
+  ip route add default via ${CABLE_GW}
+}
+
+down() {
+  ip addr flush dev ${IF}
+  ip addr add ${WIFI_IP}/24 dev ${IF}
+  ip addr add ${DEV_IP}/24 dev ${IF}
+  #ip route del default via ${CABLE_GW}
+  ip route add default via ${WIFI_GW}
+  #ip addr del ${CABLE_IP}/24 dev ${IF}
+}
+
+if [ "$EUID" -ne 0 ]; then
+  echo "No Permission to run, try again!"
+  exit 1
+fi
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: $0 <command>"
+  echo "       Where command can be either up or down"
+  exit 1
+fi
+
+case $1 in
+  "up")
+    up
+  ;;
+  "down")
+    down
+  ;;
+  *)
+    echo "Unknown arg '$1', expect up or down"
+    usage
+  ;;
+esac

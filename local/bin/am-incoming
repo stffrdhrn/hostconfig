@@ -1,6 +1,4 @@
 #!/bin/bash
-# for use with the linux kernel, apply patches that are in
-# the incoming directory
 
 INCOMING=$HOME/work/incoming
 
@@ -24,7 +22,7 @@ am_patch() {
     exit 1
   fi
 
-  if git am -s "$patch" ; then
+  if git am -3 -s "$patch" ; then
     mv $patch $INCOMING/zapped/
   fi
 }
