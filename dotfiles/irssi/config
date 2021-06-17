@@ -5,9 +5,7 @@ servers = (
   {
     address = "chat.freenode.net";
     chatnet = "Freenode";
-    password = "__PASSWORD__";
     port = "6667";
-    autoconnect = "yes";
   },
   {
     address = "irc.gamesurge.net";
@@ -25,7 +23,10 @@ servers = (
   {
     address = "irc.oftc.net";
     chatnet = "OFTC";
-    port = "6667";
+    port = "6697";
+    use_tls = "yes";
+    tls_cert = "~/.irssi/certs/shorne.pem";
+    tls_verify = "yes";
     autoconnect = "yes";
   },
   { 
@@ -41,12 +42,12 @@ servers = (
     port = "6667";
   },
   {
-    address = "irc.gitter.im";
-    chatnet = "gitter";
+    address = "irc.libera.chat";
+    chatnet = "Libera";
     port = "6697";
-    password = "fac4ef265cb8c159334d202d1343bf139d98583a";
     use_tls = "yes";
-    tls_verify = "no";
+    password = "__PASSWORD__";
+    autoconnect = "yes";
   }
 );
 
@@ -119,7 +120,7 @@ chatnets = {
     max_msgs = "1";
     max_whois = "1";
   };
-  gitter = { type = "IRC"; nick = "stffrdhrn"; };
+  Libera = { type = "IRC"; };
 };
 
 channels = (
@@ -132,14 +133,20 @@ channels = (
   { name = "#netfuze"; chatnet = "NetFuze"; autojoin = "No"; },
   { name = "#oftc"; chatnet = "OFTC"; autojoin = "No"; },
   { name = "silc"; chatnet = "SILC"; autojoin = "No"; },
-  { name = "#edevelop"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#openrisc"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#gdb"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#glibc"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#timvideos"; chatnet = "Freenode"; autojoin = "yes"; },
+
   { name = "#kernelnewbies"; chatnet = "oftc"; autojoin = "yes"; },
   { name = "#gcc"; chatnet = "oftc"; autojoin = "yes"; },
   { name = "#qemu"; chatnet = "oftc"; autojoin = "yes"; },
-  { name = "#timvideos"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#glibc"; chatnet = "oftc"; autojoin = "yes"; },
+  { name = "#openrisc"; chatnet = "oftc"; autojoin = "yes"; },
+
+  { name = "#gdb"; chatnet = "Libera"; autojoin = "yes"; },
+  { name = "#litex"; chatnet = "Libera"; autojoin = "yes"; },
+  { name = "#e"; chatnet = "Libera"; autojoin = "yes"; },
+  { name = "#openrisc"; chatnet = "Libera"; autojoin = "yes"; }
 );
 
 aliases = {
