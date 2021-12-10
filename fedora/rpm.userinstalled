@@ -1,3 +1,12 @@
+ 1062  sudo yum install vim
+ 1091  sudo yum install tunctl
+ 1173  sudo yum install evince
+ 1177  sudo yum install gnome-tweaks.noarch
+ 1190  sudo yum install gnome-remote-desktop.x86_64
+ 1379  sudo yum install msmtp.x86_64
+ 1387  sudo yum install mailx
+
+
 Packages installed by user
 acl-debuginfo-2.2.52-10.fc23.x86_64
 adcli-0.8.0-2.fc24.x86_64

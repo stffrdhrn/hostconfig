@@ -1,0 +1,74 @@
+ID     | Command line                                                                                                                | Date and time    | Action(s)      | Altered
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    72 | install perl-Log-Log4perl.noarch                                                                                            | 2021-12-11 04:26 | Install        |   74   
+    71 | debuginfo-install glibc-2.33-8.fc34.x86_64 gmp-6.2.0-6.fc34.x86_64 libmpc-1.2.1-2.fc34.x86_64 mpfr-4.1.0-6.fc34.x86_64      | 2021-11-07 11:02 | Install        |    4   
+    70 | install perf                                                                                                                | 2021-10-20 09:32 | Install        |    5   
+    69 | install java-latest-openjdk-devel.x86_64                                                                                    | 2021-10-07 07:34 | Install        |    1   
+    68 | install java-latest-openjdk.x86_64                                                                                          | 2021-10-07 07:32 | Install        |    4   
+    67 | install -y libtool libyaml-devel sqlite-devel                                                                               | 2021-09-14 07:09 | Install        |    3   
+    66 | install ruby-devel                                                                                                          | 2021-09-14 06:46 | Install        |    1   
+    65 |                                                                                                                             | 2021-09-11 17:46 | Install        |   12   
+    64 | install automake-1.16.2-4.fc34.noarch                                                                                       | 2021-08-18 06:26 | Install        |    1   
+    63 | install texinfo.x86_64                                                                                                      | 2021-08-18 05:30 | Install        |   12   
+    62 | install shotcut.x86_64                                                                                                      | 2021-07-16 06:18 | Install        |   86   
+    61 | install obs-studio                                                                                                          | 2021-07-15 06:41 | Install        |   31   
+    60 | install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-34.noarch.rpm https://download1.rpmfusion.org/no | 2021-07-15 06:37 | Install        |    2   
+    59 | install libfdt-devel.x86_64                                                                                                 | 2021-07-09 23:32 | I, U           |    2   
+    58 | install pixman-devel.x86_64                                                                                                 | 2021-07-09 23:04 | Install        |    1   
+    57 | install glib2-devel                                                                                                         | 2021-07-09 23:03 | Install        |   11   
+    56 | install ninja-build                                                                                                         | 2021-07-09 23:01 | Install        |    1   
+    55 | install libmpc-devel.x86_64                                                                                                 | 2021-07-02 06:34 | Install        |    1   
+    54 |                                                                                                                             | 2021-06-25 02:25 | Install        |    1   
+    53 | install gperf                                                                                                               | 2021-06-21 20:35 | Install        |    1   
+    52 | install autoconf                                                                                                            | 2021-06-21 20:35 | Install        |    1   
+    51 |                                                                                                                             | 2021-06-17 06:35 | Install        |    1   
+    50 | install elfutils-libelf-devel.x86_64                                                                                        | 2021-06-11 05:22 | I, U           |    4   
+    49 | install iverilog-11.0-2.fc34.x86_64                                                                                         | 2021-06-11 05:17 | Install        |    1   
+    48 | install mailx-12.5-37.fc34.x86_64                                                                                           | 2021-06-05 06:23 | Install        |    1   
+    47 |                                                                                                                             | 2021-06-01 06:04 | Install        |    3  <
+    46 | install libstdc++-static.x86_64                                                                                             | 2021-05-31 08:16 | Install        |    1 > 
+    45 | install glibc-static                                                                                                        | 2021-05-31 08:15 | Install        |    2   
+    44 | install cmake                                                                                                               | 2021-05-31 06:39 | Install        |    6   
+    43 | install libffi-devel.x86_64                                                                                                 | 2021-05-31 06:23 | Install        |    1   
+    42 | install readline-devel.x86_64                                                                                               | 2021-05-31 06:22 | Install        |    1   
+    41 | install tcl-devel.x86_64                                                                                                    | 2021-05-31 06:22 | Install        |    2   
+    40 |                                                                                                                             | 2021-05-26 21:10 | Install        |    6  <
+    39 | install yosys.x86_64                                                                                                        | 2021-05-26 18:38 | Install        |   15 > 
+    38 | install openssl-devel.x86_64                                                                                                | 2021-05-20 05:36 | Install        |    1   
+    37 | install gcc-riscv64-linux-gnu                                                                                               | 2021-05-20 05:26 | Install        |    5   
+    36 |                                                                                                                             | 2021-05-17 13:26 | I, U           |   20   
+    35 | install lm_sensors-3.6.0-8.fc34.x86_64                                                                                      | 2021-05-17 06:22 | Install        |    2 EE
+    34 |                                                                                                                             | 2021-05-17 05:19 | I, U           |   81   
+    33 |                                                                                                                             | 2021-05-16 18:55 | Install        |    7   
+    32 |                                                                                                                             | 2021-05-16 18:55 | Install        |   59   
+    31 |                                                                                                                             | 2021-05-16 18:46 | Install        |    1   
+    30 | install git-email                                                                                                           | 2021-05-15 16:53 | Install        |   10   
+    29 |                                                                                                                             | 2021-05-14 06:25 | Install        |    1   
+    28 | install openocd                                                                                                             | 2021-05-14 05:09 | Install        |    5   
+    27 | install fakeroot.x86_64                                                                                                     | 2021-05-13 18:23 | Install        |    2   
+    26 | install perl-FindBin.noarch                                                                                                 | 2021-05-13 06:27 | Install        |    1   
+    25 |                                                                                                                             | 2021-05-13 05:54 | Install        |    2   
+    24 | install dtc-1.6.0-4.fc34.x86_64                                                                                             | 2021-05-13 04:51 | Install        |    1   
+    23 | install perl-Thread-Queue.noarch perl-ExtUtils-MakeMaker.noarch                                                             | 2021-05-13 04:50 | Install        |   45   
+    22 |                                                                                                                             | 2021-05-13 04:49 | Install        |    2   
+    21 |                                                                                                                             | 2021-05-13 04:49 | Install        |    3   
+    20 |                                                                                                                             | 2021-05-12 07:23 | Install        |    1   
+    19 |                                                                                                                             | 2021-05-12 06:06 | Install        |    1   
+    18 | install tftp-server-5.2-32.fc34                                                                                             | 2021-05-12 06:03 | Install        |    1   
+    17 | install ncurses-compat-libs-6.2-4.20200222.fc34                                                                             | 2021-05-12 05:51 | Install        |    1   
+    16 | install libfl2.x86_64                                                                                                       | 2021-05-12 05:23 | Install        |    1   
+    15 | install mpfr.x86_64 mpfr-devel.x86_64                                                                                       | 2021-05-11 22:51 | Install        |    3   
+    14 | install flex                                                                                                                | 2021-05-11 22:43 | Install        |    1   
+    13 | install bison                                                                                                               | 2021-05-11 22:43 | Install        |    2   
+    12 |                                                                                                                             | 2021-05-10 06:39 | Install        |    1   
+    11 | install ncurses-devel                                                                                                       | 2021-05-10 05:48 | Install        |    2   
+    10 | install screen                                                                                                              | 2021-05-09 19:02 | Install        |    1   
+     9 | install cronie                                                                                                              | 2021-05-09 18:53 | Install        |    3 EE
+     8 | install isync.x86_64                                                                                                        | 2021-05-09 18:35 | Install        |    1   
+     7 | install msmtp                                                                                                               | 2021-05-09 18:10 | Install        |    4   
+     6 | install mutt irssi                                                                                                          | 2021-05-09 18:06 | Install        |    7   
+     5 |                                                                                                                             | 2021-05-09 17:46 | Install        |    4   
+     4 |                                                                                                                             | 2021-05-09 17:18 | Install        |    2   
+     3 |                                                                                                                             | 2021-05-09 17:17 | Install        |    2   
+     2 | update                                                                                                                      | 2021-05-09 16:30 | I, O, U        |  337 EE
+     1 |                                                                                                                             | 2021-04-23 19:56 | Install        | 1709 EE
