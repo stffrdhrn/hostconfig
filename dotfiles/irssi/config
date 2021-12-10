@@ -2,7 +2,7 @@ servers = (
   { address = "irc.dal.net"; chatnet = "DALnet"; port = "6667"; },
   { address = "irc.efnet.org"; chatnet = "EFNet"; port = "6667"; },
   { address = "irc.esper.net"; chatnet = "EsperNet"; port = "6667"; },
-  {
+  { 
     address = "chat.freenode.net";
     chatnet = "Freenode";
     port = "6667";
@@ -46,7 +46,7 @@ servers = (
     chatnet = "Libera";
     port = "6697";
     use_tls = "yes";
-    password = "__PASSWORD__";
+    password = "__PASSWORD__REPLACED__";
     autoconnect = "yes";
   }
 );

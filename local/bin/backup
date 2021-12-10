@@ -4,7 +4,7 @@
 source $HOME/.hostconfigrc
 
 host=$(hostname)
-today=$(date -u +%Y-%m-%d)
+today=$(date +%Y-%m-%d)
 
 if [ -z "$BACKUP_HOME" ] ; then
   echo "Missing BACKUP_HOME definition." 1>&2
@@ -35,9 +35,6 @@ YEAR_DAY_TO_KEEP=${YEAR_DAY_TO_KEEP:-1}
 # day of month to keep (KEEP_MONTH_MIN), 1 - 31
 MONTH_DAY_TO_KEEP=${MONTH_DAY_TO_KEEP:-1}
 
-# Compress settings
-UNCOMPRESS_KEEP_DAYS=${UNCOMPRESS_KEEP_DAYS:-2}
-
 # Run with V=1 for debug, etc
 V=${V:-3}
 
@@ -47,7 +44,7 @@ log() {
   local msg=$1 ; shift
 
   if [ $level -ge $V ] ; then
-    printf "%s %s $msg\n" $(date -u -Iseconds) $level_str >> $LOG
+    printf "%s %s $msg\n" $(date -Iseconds) $level_str >> $LOG
   fi
 }
 debug() { log 1 "DEBUG" "$1"; }
@@ -119,11 +116,11 @@ info "Starting: $0 user: $LOGNAME pid: $$ Logging to file: $LOG"
 # 1. if local, remove old stuff
 #  keep daily           snapshots for 1 week
 #  keep weekly (sunday) snapshots for 1 year
-#  keep yearly (jan 1)  snapshots forever 
+#  keep yearly (jan 1)  snapshots forever
 
 if [ -d $BACKUP_HOME ] ; then
   info "Cleaning up $DEST_HOME"
-  for snapshot in `find $DEST_HOME -maxdepth 2 -name '*-*-*' | sort -r `; do
+  for snapshot in `find $DEST_HOME -maxdepth 2 | grep '/....-..-..$'`; do
     snapshot_dt=`basename $snapshot`
     snapshot_base=`dirname $snapshot`
 
@@ -143,18 +140,7 @@ if [ -d $BACKUP_HOME ] ; then
   done
 fi
 
-# 2. If local, compress old stuff
-if [ -d $BACKUP_HOME ] ; then
-  info "Compressing $DEST_HOME"
-  for hostdir in $BACKUP_HOME/*; do
-    for snapshot_dir in `ls $hostdir | head -n -${UNCOMPRESS_KEEP_DAYS}` ; do
-      info "Compressing snapshot $snapshot_dir"
-    done
-  done
-fi
-
-
-# 3. backup today
+# 2. backup today
 if [ -f $HOME/.backups ] ; then
   while read path; do
     backup $path </dev/null
@@ -163,7 +149,6 @@ else
   warn "No backups, you need to define $HOME/.backups"
 fi
 
-# Check logs for errors and report
 if grep -q " ERROR " $LOG ; then
   {
     echo "Dear Sysop,"
@@ -172,6 +157,6 @@ if grep -q " ERROR " $LOG ; then
     echo "Host: $host"
     echo "Log: $LOG"
     echo
-    grep " ERROR " $LOG 
+    grep " ERROR " $LOG
   } | report
 fi

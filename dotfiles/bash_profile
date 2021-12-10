@@ -64,8 +64,8 @@ LADSPA_PATH=/usr/lib64/ladspa:$HOME/media/plugins
 # Allow Homebuild Python Modules to be found
 PYTHONPATH=/opt/shorne/software/orsoc/lib/python2.7/site-packages
 
-PATH=$PATH:$HOME/work/bin
-GOPATH=$HOME/work
+#PATH=$PATH:$HOME/work/bin
+#GOPATH=$HOME/work
 
 # Ruby Documentation formatter
 RI="-f ansi -T"

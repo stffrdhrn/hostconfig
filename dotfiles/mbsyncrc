@@ -28,13 +28,15 @@ Inbox ~/.mail/gmail/Inbox
 SubFolders Legacy
 
 Channel gmail
-Master :gmail-remote:
-Slave :gmail-local:
+Far :gmail-remote:
+Near :gmail-local:
 # Exclude everything under the internal [Gmail] folder, except the interesting folders
-Patterns INBOX linux-kernel fsf openrisc qemu ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred"
+Patterns INBOX linux-kernel fsf openrisc openrisc-only qemu buildroot ![Gmail]* "[Gmail]/All Mail" "[Gmail]/Sent Mail" "[Gmail]/Starred"
 # Or include everything
 #Patterns *
 # Automatically create missing mailboxes, both locally and on the server
 Create Both
+# Remove mail from gmail after it is removed locally
+Expunge Both
 # Save the synchronization state files in the relevant directory
 SyncState *

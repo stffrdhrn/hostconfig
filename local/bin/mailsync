@@ -29,11 +29,12 @@ info()  { log 3 "INFO" "$1"; }
 warn()  { log 5 "WARN" "$1"; }
 error() { log 6 "ERROR" "$1"; }
 
-info "Removing old mails"
-find ~/.mail/gmail/buildroot/ -mtime +90 -delete
-find ~/.mail/gmail/linux-kernel/ -mtime +90 -delete
-find ~/.mail/gmail/fsf/ -mtime +90 -delete
-find ~/.mail/gmail/qemu/ -mtime +90 -delete
+## This just removes mail labels, got to figure out how to really remove mail!
+#info "Removing old mails"
+#find ~/.mail/gmail/buildroot/ -mtime +90 -delete
+#find ~/.mail/gmail/linux-kernel/ -mtime +90 -delete
+#find ~/.mail/gmail/fsf/ -mtime +90 -delete
+#find ~/.mail/gmail/qemu/ -mtime +90 -delete
 
 info "Mail sync started"
 mbsync -V -Dn gmail >> $LOG

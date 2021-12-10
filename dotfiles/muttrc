@@ -7,6 +7,7 @@ set use_from=yes
 set realname="Stafford Horne"
 set from="shorne@gmail.com"
 set envelope_from=yes
+set editor=vim
 
 # IMAP for folders
 #set imap_user = 'shorne@gmail.com'
@@ -49,7 +50,8 @@ set sort_alias = alias
 source $alias_file
 
 # render HTML and some other types as text
-auto_view text/html application/text application/pdf
+#auto_view text/html application/text application/pdf
 
 # many companies send very poor text/plain parts, so prefer html to text/plain
-alternative_order text/enriched text/html text/plain text
+#alternative_order text/enriched text/html text/plain text
+alternative_order text/plain text

@@ -28,5 +28,10 @@
 [alias]
 	dc = diff --cached
 	lo = log --pretty=format:'%C(yellow)%cd %C(green)%h %C(blue)%<(16)%aN%Creset %s %C(auto)%d%Creset' --decorate --date=short -n10
+	lp = log --pretty=format:'%h (\"%s\")' -n1
 #	lo = log --oneline -n10
 	rmt = remote -v
+[http]
+	sslVerify = true
+[rebase]
+	autosquash = true

@@ -1,0 +1,32 @@
+#!/bin/bash
+#set -x
+
+# Clean a few thousand files at a time only run
+# a few times per day to allow mailsync to catch up.
+
+source $HOME/.hostconfigrc
+
+host=$(hostname)
+today=$(date +%Y-%m-%d)
+
+LOG="$LOG_DIR/mailclear-${LOGNAME}-${host}-${today}.log"
+V=${V:-3}
+DIR=`dirname $0`
+
+log() {
+  local level=$1 ; shift
+  local level_str=$1 ; shift
+  local msg=$1 ; shift
+
+  if [ $level -ge $V ] ; then
+    printf "%s %s $msg\n" $(date -Iseconds) $level_str >> $LOG
+  fi
+}
+debug() { log 1 "DEBUG" "$1"; }
+info()  { log 3 "INFO" "$1"; }
+warn()  { log 5 "WARN" "$1"; }
+error() { log 6 "ERROR" "$1"; }
+
+info "Mail clear started"
+$DIR/clean-maildirs.pl >> $LOG
+info "Mail clear complete"

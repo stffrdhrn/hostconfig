@@ -16,3 +16,4 @@ mkdir -p $STATS_HOME
 
 # Clean up old log files
 find $LOG_DIR -mtime +5 -delete
+find $LOG_DIR -mtime +1 -name "*.log" -exec gzip {} \;
