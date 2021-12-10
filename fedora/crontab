@@ -1,0 +1,8 @@
+# Stafford Jobs
+#m  h        d m w
+*/9 0-2,6-23 * * *	/home/shorne/local/bin/mailsync
+0   23,5,12  * * *	/home/shorne/local/bin/clean-maildirs
+10  5,15     * * * 	/home/shorne/local/bin/clean-incoming
+#0  3        * * *	/home/shorne/local/bin/backup
+5   *        * * *	/home/shorne/local/bin/collect-stats
+5   *        * * *	/home/shorne/local/bin/forward-errors
