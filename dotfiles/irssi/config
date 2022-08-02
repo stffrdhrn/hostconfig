@@ -147,6 +147,7 @@ channels = (
   { name = "#litex"; chatnet = "Libera"; autojoin = "yes"; },
   { name = "#e"; chatnet = "Libera"; autojoin = "yes"; },
   { name = "#openrisc"; chatnet = "Libera"; autojoin = "yes"; }
+  { name = "#wireguard"; chatnet = "Libera"; autojoin = "yes"; }
 );
 
 aliases = {

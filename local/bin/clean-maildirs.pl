@@ -6,6 +6,89 @@ use Getopt::Long;
 
 use strict;
 
+# Searches maildirs for files that we want to delete based
+# on the config listed below.  The Idea is that our mbsync
+# will notice the files are missing and delete from from IMAP.
+# A issue with gmail is it seems we need to delete the same mail
+# from all tags/folders to actuall delete the file.
+#
+# Maildir file format
+#  new - just came in
+#  cur - existing
+#  tmp - for outgoing only
+#
+# File format:
+# Example: openrisc/cur/1620593553.17519_267.antec,U=256:2,FS
+#                       \                         /
+#                        -- unique id ------------
+# Unique id
+#  {time}.{pid}_{count}.{hostname}
+#
+# time  - unix timestamp of when the file was created
+# pid   - the pid of the sync process
+# count - msg count for this sync session, increments each message
+# host  - the hostname
+#
+# U={UID}
+#
+# UID - a UID but not the one from the mbsync logs. See below
+#       this is the near side UID.
+#
+# :2,{flags}
+#
+# flags - flags indicating the mail status
+#  D - Draft
+#  F - Flagged
+#  R - Replied
+#  S - Seen
+#  T - Trashed
+#
+# Code: https://github.com/djnym/isync/blob/master/src/drv_maildir.c#L1038
+#
+##########################################################################
+#
+# Mail sync logs:
+#
+# The mailsync logs contain logs in this format:
+#
+# * 11704 FETCH (UID 58883 FLAGS ())
+# * 11705 FETCH (UID 58887 FLAGS ())
+# * 11706 FETCH (UID 58889 FLAGS (\Seen))
+#
+# * 11704 FETCH (UID 56959 FLAGS ())
+# * 11705 FETCH (UID 56960 FLAGS (\Seen))
+# * 11706 FETCH (UID 56962 FLAGS ())
+#
+# * 11705 FETCH (UID 56960 FLAGS (\Deleted \Seen))
+#
+# This is the log of the remote IMAP syncing. The format is
+# * {idx} FETCH (UID {UID} FLAGS ({flags}))
+#
+# idx   - the index of the fetch command for this mail box
+#         beware this overlaps for mailboxes
+# UID   - the far side mail UID, See below
+# flags - The far side flags
+#
+#
+###########################################################################
+#
+# MAPPING FAR-SIDE NEAR-SIDE UIDs
+#
+# mbsync stores a map file, i.e. gmail/Inbox/.mbsyncstate
+# the format looks like:
+# ...
+# 56959 15533 S
+# 56962 15536
+# 56964 15538
+# 56965 15539
+# 56967 15541
+# \far/ \near/ \flags/
+#
+# far  - the far side UID, this is what you see in logs
+# near - the near side UID, this is what we see in the maildir
+# flags - the current flags we know of
+#
+
 Log::Log4perl->easy_init({
   level => $INFO,
   file  => 'STDOUT',

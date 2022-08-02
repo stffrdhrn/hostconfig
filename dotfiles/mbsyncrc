@@ -11,7 +11,7 @@ SSLType IMAPS
 #SSLVersions TLSv1.3
 # The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
 CertificateFile /etc/ssl/certs/ca-bundle.crt
-CertificateFile /etc/ssl/certs/ca-bundle.trust.crt
+#CertificateFile /etc/ssl/certs/ca-bundle.trust.crt
 #CertificateFile ~/.cert/imap.gmail.com.pem
 #CertificateFile ~/.cert/google.pem
 #CertificateFile ~/.cert/Equifax_Secure_CA.pem
@@ -31,7 +31,7 @@ Channel gmail
 Far :gmail-remote:
 Near :gmail-local:
 # Exclude everything under the internal [Gmail] folder, except the interesting folders
-Patterns INBOX linux-kernel fsf openrisc openrisc-only qemu buildroot ![Gmail]* "[Gmail]/All Mail" "[Gmail]/Sent Mail" "[Gmail]/Starred"
+Patterns INBOX linux-kernel kbuild fsf* openrisc* qemu buildroot ![Gmail]* "[Gmail]/All Mail" "[Gmail]/Sent Mail" "[Gmail]/Starred"
 # Or include everything
 #Patterns *
 # Automatically create missing mailboxes, both locally and on the server
