@@ -1,0 +1,10 @@
+#!/bin/bash
+# Source this into your bash environment to get completion
+# It depends on git completion being available
+
+_push_branch_cmpl() {
+  local completions=$(__git_heads);
+  COMPREPLY=($(compgen -W "$completions" -- "$2"));
+}
+
+complete -F _push_branch_cmpl ./patches/push-branch.sh

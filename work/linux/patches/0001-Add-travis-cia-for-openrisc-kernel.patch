@@ -1,0 +1,156 @@
+From da6b03f4db60bcfc1913a0ceeb9cb80ccff56324 Mon Sep 17 00:00:00 2001
+From: Stafford Horne <shorne@gmail.com>
+Date: Sat, 4 Feb 2017 11:10:04 +0900
+Subject: [PATCH] Add travis cia for openrisc kernel
+
+This should not go upstream.  Just keep in openrisc repos.
+
+Changes since v1
+ - add libelf for x86 build failure
+
+Changes since v2
+ - fix .gitignore conflict
+ - update gcc toolchain to 9.0.0
+
+Changes since v3
+ - fix conflict in .gitconfig
+ - update image to bionic
+ - fixup mpfr with a ln hack, needed by or1k toolchain
+
+Changes since v4
+ - convert from travis to github CI
+---
+ .github/workflows/ci.yml | 48 ++++++++++++++++++++++++++++++++++++++++
+ .gitignore               |  2 ++
+ .travis.yml              | 27 ++++++++++++++++++++++
+ readme.md                | 16 ++++++++++++++
+ 4 files changed, 93 insertions(+)
+ create mode 100644 .github/workflows/ci.yml
+ create mode 100644 .travis.yml
+ create mode 100644 readme.md
+
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+new file mode 100644
+index 000000000000..d973c108daf5
+--- /dev/null
++++ b/.github/workflows/ci.yml
+@@ -0,0 +1,48 @@
++name: ci
++
++on: [push, pull_request, workflow_dispatch]
++
++jobs:
++  kernel-builds:
++    runs-on: ubuntu-18.04
++    env:
++      LD_LIBRARY_PATH: "/tmp/tools/lib"
++      CONFIG: ${{ matrix.env.CONFIG }}
++      ARCH: ${{ matrix.env.ARCH }}
++      CROSS_COMPILE: ${{ matrix.env.CROSS_COMPILE }}
++    steps:
++      # Checkout Repository
++      - name: Checkout
++        uses: actions/checkout@v2
++
++      # Install OS Tools
++      - name: Install Tools
++        run: |
++          sudo apt-get install build-essential bc xz-utils git iverilog libelf-dev
++      # Install Toolchain
++      - name: Install Toolchain
++        run: |
++          mkdir -p /tmp/tools/lib
++          cd /tmp/tools
++          curl --remote-name --location \
++            https://github.com/stffrdhrn/gcc/releases/download/or1k-10.0.0-20190723/or1k-elf-10.0.0-20190723.tar.xz
++          tar xC /tmp/tools -f or1k-elf-10.0.0-20190723.tar.xz
++          ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.6 /tmp/tools/lib/libmpfr.so.4
++          export PATH=$PATH:/tmp/tools/or1k-elf/bin/
++          or1k-elf-gcc --version
++      - name: Run Build
++        shell: bash {0}
++        run: |
++          export PATH=$PATH:/tmp/tools/or1k-elf/bin
++          make ARCH=$ARCH $CONFIG && make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE -j2
++
++    strategy:
++      matrix:
++        env:
++          - { ARCH: "openrisc", CONFIG: "defconfig", CROSS_COMPILE: "or1k-elf-" }
++          - { ARCH: "openrisc", CONFIG: "allnoconfig", CROSS_COMPILE: "or1k-elf-" }
++          - { ARCH: "openrisc", CONFIG: "alldefconfig", CROSS_COMPILE: "or1k-elf-" }
++          - { ARCH: "x86", CONFIG: "defconfig", CROSS_COMPILE: "" }
++         # fails with ./usr/include/linux/if.h:28:10: fatal error: sys/socket.h:
++         # No such file or directory
++         #- { ARCH: "openrisc", CONFIG: "allyesconfig", CROSS_COMPILE: "or1k-elf-" }
+diff --git a/.gitignore b/.gitignore
+index 7afd412dadd2..c7c4535b593d 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -96,6 +96,8 @@ modules.order
+ !.gitattributes
+ !.gitignore
+ !.mailmap
++!.travis.yml
++!.github/
+ 
+ #
+ # Generated include files
+diff --git a/.travis.yml b/.travis.yml
+new file mode 100644
+index 000000000000..792885b38be1
+--- /dev/null
++++ b/.travis.yml
+@@ -0,0 +1,27 @@
++dist: bionic    # bionic needed for gcc 7.4 retpoline
++sudo: false
++language: c
++branches:
++  - travis
++addons:
++  apt:
++    sources:
++      - ubuntu-toolchain-r-test # get gcc-6
++    packages:
++      - build-essential
++      - bc                      # basic for linux build
++      - libmpc3                 # needed for or1k-linux- toolchain
++      - libelf-dev
++env:
++  matrix:
++    - ARCH=openrisc    CONFIG=defconfig     CROSS_COMPILE=or1k-linux-
++    - ARCH=openrisc    CONFIG=allnoconfig   CROSS_COMPILE=or1k-linux-
++    - ARCH=openrisc    CONFIG=allyesconfig  CROSS_COMPILE=or1k-linux-
++    - ARCH=openrisc    CONFIG=alldefconfig  CROSS_COMPILE=or1k-linux-
++    - ARCH=x86    CONFIG=defconfig
++before_install:
++  - wget https://github.com/stffrdhrn/gcc/releases/download/or1k-9.0.0-20180613/or1k-linux-9.0.0-20180612.tar.xz -O /tmp/gcc.tar.xz
++  - tar -xf /tmp/gcc.tar.xz
++  - sudo ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.6 /usr/lib/x86_64-linux-gnu/libmpfr.so.4 # because or1k toolchain needs old mpfr
++  - export PATH=$PATH:$PWD/or1k-linux/bin
++script:  make $CONFIG && make -j2
+diff --git a/readme.md b/readme.md
+new file mode 100644
+index 000000000000..67bc81412a31
+--- /dev/null
++++ b/readme.md
+@@ -0,0 +1,16 @@
++# OpenRISC Linux CI build branch
++
++This branch just has the github ci commits on top of the main
++branch.
++
++Its a bit of a hack but we dont want travis files to get into
++upstream so I thought this way is good. If there is a better
++way let me know.
++
++To update latest code:
++
++```
++git checkout travis
++git rebase -i for-next
++git push origin travis
++```
+-- 
+2.31.1
+
