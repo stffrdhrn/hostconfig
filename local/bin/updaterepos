@@ -1,0 +1,45 @@
+#!/bin/sh
+# Update or fetch all of my github repos
+
+fetchrepo() {
+  local repo=$1; shift
+  local remote=$1; shift
+  local dir=$1; shift
+
+  if [ -d $dir ] ; then
+    if [ ! -d "${dir}/.git/refs/remotes/${remote}" ] ; then
+      echo "directory $dir exists, but missing remote ${remote}, adding..."
+      git -C $dir remote add $remote $repo
+    fi
+    echo "directory $dir and remote ${remote} already exists, fetching..."
+    git -C $dir fetch $remote
+  elif [ $remote == 'origin' ] ; then
+    git clone -- $repo $dir
+  else
+    echo "missing $dir, and won't fetch '$remote', please configure an 'origin'"
+  fi
+}
+
+# setup repos for development
+# - linux kernel
+# - gcc
+# - binutils
+# - glibc
+# - buildroot
+# - qemu
+
+#fetchrepo 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' origin $HOME/work/linux
+fetchrepo 'git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git' origin $HOME/work/linux
+fetchrepo 'git@github.com:openrisc/linux.git'   	openrisc	$HOME/work/linux
+fetchrepo 'git@github.com:stffrdhrn/linux.git'  	shorne		$HOME/work/linux
+fetchrepo 'git@github.com:AsahiLinux/linux.git' 	asahi		$HOME/work/linux
+
+fetchrepo 'git://gcc.gnu.org/git/gcc'			origin		$HOME/work/gnu-toolchain/gcc
+fetchrepo 'git://sourceware.org/git/binutils-gdb.git' 	origin		$HOME/work/gnu-toolchain/binutils-gdb
+fetchrepo 'git://sourceware.org/git/glibc.git'		origin		$HOME/work/gnu-toolchain/glibc
+fetchrepo 'git@github.com:stffrdhrn/buildall.git'	origin		$HOME/work/gnu-toolchain/buildall
+fetchrepo 'git://git.busybox.net/buildroot'		origin		$HOME/work/openrisc/buildroot
+fetchrepo 'git://git.qemu.org/qemu.git'			origin		$HOME/work/qemu
+fetchrepo 'git@github.com:stffrdhrn/qemu.git'		shorne		$HOME/work/qemu
+
+fetchrepo 'git@github.com:stffrdhrn/or1k-utils.git'	origin		$HOME/work/openrisc/or1k-utils
