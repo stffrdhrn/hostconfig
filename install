@@ -9,3 +9,12 @@ for file in dotfiles/*; do
     cp -a $file $HOME/.$name
   fi
 done
+
+for script in local/bin/*; do
+  name=`basename $script`
+  if [ -f $HOME/.local/bin/$name ] ; then
+    echo "# ~/.local/bin/$name exists, not updating"
+  else
+    cp -a $script $HOME/.local/bin/
+  fi
+done

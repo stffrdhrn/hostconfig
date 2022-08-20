@@ -5,4 +5,4 @@ for file in dotfiles/*; do
   diff -ru $file $HOME/.$name
 done
 
-diff -ru local/bin $HOME/local/bin
+diff -ru local/bin $HOME/.local/bin
