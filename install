@@ -2,7 +2,7 @@
 
 for file in dotfiles/*; do
   name=`basename $file`
-  if [ -f $HOME/.$name ] ; then
+  if [ -e $HOME/.$name ] ; then
     echo "# ~/.$name exists, install manually with"
     echo "cp -a $file $HOME/.$name"
   else
@@ -12,7 +12,7 @@ done
 
 for script in local/bin/*; do
   name=`basename $script`
-  if [ -f $HOME/.local/bin/$name ] ; then
+  if [ -e $HOME/.local/bin/$name ] ; then
     echo "# ~/.local/bin/$name exists, not updating"
   else
     cp -a $script $HOME/.local/bin/
