@@ -1,4 +1,4 @@
-From da6b03f4db60bcfc1913a0ceeb9cb80ccff56324 Mon Sep 17 00:00:00 2001
+From fbb3161a6fe1f0a38af208a16cfef10af36b0958 Mon Sep 17 00:00:00 2001
 From: Stafford Horne <shorne@gmail.com>
 Date: Sat, 4 Feb 2017 11:10:04 +0900
 Subject: [PATCH] Add travis cia for openrisc kernel
@@ -84,13 +84,13 @@ index 000000000000..d973c108daf5
 +         # No such file or directory
 +         #- { ARCH: "openrisc", CONFIG: "allyesconfig", CROSS_COMPILE: "or1k-elf-" }
 diff --git a/.gitignore b/.gitignore
-index 7afd412dadd2..c7c4535b593d 100644
+index 5937c74d3dc1..499428cfb7c9 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -96,6 +96,8 @@ modules.order
- !.gitattributes
- !.gitignore
+@@ -113,6 +113,8 @@ modules.order
+ !.kunitconfig
  !.mailmap
+ !.rustfmt.toml
 +!.travis.yml
 +!.github/
  
@@ -152,5 +152,5 @@ index 000000000000..67bc81412a31
 +git push origin travis
 +```
 -- 
-2.31.1
+2.47.0
 

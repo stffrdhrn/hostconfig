@@ -20,7 +20,7 @@ git push -f openrisc HEAD
 # Push changes to travis (will be build tested)
 git checkout travis
 git reset --hard $BRANCH
-git am patches/0001-Add-travis-cia-for-openrisc-kernel.patch
+git am --3way patches/0001-Add-travis-cia-for-openrisc-kernel.patch
 git push -f shorne HEAD
 
 git checkout $BRANCH
