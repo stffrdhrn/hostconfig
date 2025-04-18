@@ -1,4 +1,4 @@
-From ab4ec7d2fc1f7f77a0c2ecc9a8df70acba068153 Mon Sep 17 00:00:00 2001
+From 12e3666bc4315629e327ff8537a0b09cd5089ea1 Mon Sep 17 00:00:00 2001
 From: Stafford Horne <shorne@gmail.com>
 Date: Sat, 4 Feb 2017 11:10:04 +0900
 Subject: [PATCH] Add travis cia for openrisc kernel
@@ -35,7 +35,7 @@ Changes since v5
 
 diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
 new file mode 100644
-index 000000000000..a757abf64280
+index 000000000000..6fd38b34c47b
 --- /dev/null
 +++ b/.github/workflows/ci.yml
 @@ -0,0 +1,47 @@
@@ -45,7 +45,7 @@ index 000000000000..a757abf64280
 +
 +jobs:
 +  kernel-builds:
-+    runs-on: ubuntu-22.04
++    runs-on: ubuntu-24.04
 +    env:
 +      LD_LIBRARY_PATH: "/tmp/tools/lib"
 +      CONFIG: ${{ matrix.env.CONFIG }}
