@@ -1,4 +1,4 @@
-From fbb3161a6fe1f0a38af208a16cfef10af36b0958 Mon Sep 17 00:00:00 2001
+From ab4ec7d2fc1f7f77a0c2ecc9a8df70acba068153 Mon Sep 17 00:00:00 2001
 From: Stafford Horne <shorne@gmail.com>
 Date: Sat, 4 Feb 2017 11:10:04 +0900
 Subject: [PATCH] Add travis cia for openrisc kernel
@@ -19,29 +19,33 @@ Changes since v3
 
 Changes since v4
  - convert from travis to github CI
+
+Changes since v5
+ - Use new or1k-linux- toolchain from or1k-toolchain-build
+ - Use ubuntu image that is not deco'd
 ---
- .github/workflows/ci.yml | 48 ++++++++++++++++++++++++++++++++++++++++
+ .github/workflows/ci.yml | 47 ++++++++++++++++++++++++++++++++++++++++
  .gitignore               |  2 ++
- .travis.yml              | 27 ++++++++++++++++++++++
+ .travis.yml              | 27 +++++++++++++++++++++++
  readme.md                | 16 ++++++++++++++
- 4 files changed, 93 insertions(+)
+ 4 files changed, 92 insertions(+)
  create mode 100644 .github/workflows/ci.yml
  create mode 100644 .travis.yml
  create mode 100644 readme.md
 
 diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
 new file mode 100644
-index 000000000000..d973c108daf5
+index 000000000000..a757abf64280
 --- /dev/null
 +++ b/.github/workflows/ci.yml
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,47 @@
 +name: ci
 +
 +on: [push, pull_request, workflow_dispatch]
 +
 +jobs:
 +  kernel-builds:
-+    runs-on: ubuntu-18.04
++    runs-on: ubuntu-22.04
 +    env:
 +      LD_LIBRARY_PATH: "/tmp/tools/lib"
 +      CONFIG: ${{ matrix.env.CONFIG }}
@@ -62,27 +66,26 @@ index 000000000000..d973c108daf5
 +          mkdir -p /tmp/tools/lib
 +          cd /tmp/tools
 +          curl --remote-name --location \
-+            https://github.com/stffrdhrn/gcc/releases/download/or1k-10.0.0-20190723/or1k-elf-10.0.0-20190723.tar.xz
-+          tar xC /tmp/tools -f or1k-elf-10.0.0-20190723.tar.xz
-+          ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.6 /tmp/tools/lib/libmpfr.so.4
-+          export PATH=$PATH:/tmp/tools/or1k-elf/bin/
-+          or1k-elf-gcc --version
++            https://github.com/stffrdhrn/or1k-toolchain-build/releases/download/or1k-14.2.0-20250418/or1k-linux-14.2.0-20250418.tar.xz
++          tar xC /tmp/tools -f or1k-linux-14.2.0-20250418.tar.xz
++          export PATH=$PATH:/tmp/tools/or1k-linux/bin/
++          or1k-linux-gcc --version
 +      - name: Run Build
 +        shell: bash {0}
 +        run: |
-+          export PATH=$PATH:/tmp/tools/or1k-elf/bin
++          export PATH=$PATH:/tmp/tools/or1k-linux/bin
 +          make ARCH=$ARCH $CONFIG && make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE -j2
 +
 +    strategy:
 +      matrix:
 +        env:
-+          - { ARCH: "openrisc", CONFIG: "defconfig", CROSS_COMPILE: "or1k-elf-" }
-+          - { ARCH: "openrisc", CONFIG: "allnoconfig", CROSS_COMPILE: "or1k-elf-" }
-+          - { ARCH: "openrisc", CONFIG: "alldefconfig", CROSS_COMPILE: "or1k-elf-" }
++          - { ARCH: "openrisc", CONFIG: "defconfig", CROSS_COMPILE: "or1k-linux-" }
++          - { ARCH: "openrisc", CONFIG: "allnoconfig", CROSS_COMPILE: "or1k-linux-" }
++          - { ARCH: "openrisc", CONFIG: "alldefconfig", CROSS_COMPILE: "or1k-linux-" }
 +          - { ARCH: "x86", CONFIG: "defconfig", CROSS_COMPILE: "" }
 +         # fails with ./usr/include/linux/if.h:28:10: fatal error: sys/socket.h:
 +         # No such file or directory
-+         #- { ARCH: "openrisc", CONFIG: "allyesconfig", CROSS_COMPILE: "or1k-elf-" }
++         #- { ARCH: "openrisc", CONFIG: "allyesconfig", CROSS_COMPILE: "or1k-linux-" }
 diff --git a/.gitignore b/.gitignore
 index 5937c74d3dc1..499428cfb7c9 100644
 --- a/.gitignore
