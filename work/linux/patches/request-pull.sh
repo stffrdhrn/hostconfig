@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Creates a linux PR for linus, for this to work we need our .git/config to
+# be configured with an https pull url and our git: pushUrl as follows:
+#
+# [remote "openrisc"]
+#        url = https://github.com/openrisc/linux.git
+#        pushUrl = git@github.com:openrisc/linux.git
+#        fetch = +refs/heads/*:refs/remotes/openrisc/*
+#
+
 since=$1
 
 if [ -z "$since" ]; then
@@ -8,9 +17,11 @@ if [ -z "$since" ]; then
   exit 1
 fi
 
+subject=$(git tag -l for-linus --format='%(contents)' | head -n1)
+
 echo "To: Linus Torvalds <torvalds@linux-foundation.org>"
-echo "Cc: Openrisc <openrisc@lists.librecores.org>, LKML <linux-kernel@vger.kernel.org>"
-echo "Subject: [GIT PULL] OpenRISC fixes/updates for ~$since"
+echo "Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>"
+echo "Subject: [GIT PULL] $subject"
 echo
 
 echo "Hello Linus,"
